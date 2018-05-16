@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mytest.newsreader.bean.NewsBean;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -31,6 +33,7 @@ import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class Fragment1 extends Fragment {
 	private static final int NODE_CHANNEL = 0;
@@ -38,36 +41,48 @@ public class Fragment1 extends Fragment {
 	private static final int NODE_NONE = -1;
 
 	private View layoutView;
-	private ProgressDialog pd;  //½ø¶ÈÖ¸Ê¾dialog
-
+	private ProgressDialog pd;  //è¿›åº¦æŒ‡ç¤ºdialog
+	private List<NewsBean> newsList = new ArrayList<NewsBean>();//æ–°é—»æ¡ç›®æ•°ç»„
+	private ListView listView1;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// ¼ÓÔØfragment1.xml²¼¾Ö
 		layoutView = inflater.inflate(R.layout.fragment1, null);
-		pd = ProgressDialog.show(getActivity(), "ÇëÉÔºò¡£¡£¡£", "ÕıÔÚ¼ÓÔØÊı¾İ",true,true);
+		listView1 = (ListView) layoutView.findViewById(R.id.listView1);
+		pd = ProgressDialog.show(getActivity(), "è¯·ç¨åã€‚ã€‚ã€‚", "æ­£åœ¨åŠ è½½æ•°æ®",true,true);
+		//å¯åŠ¨ä¸€ä¸ªçº¿ç¨‹
 		new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				// Í¨¹ıhttpGet»ñÈ¡RSSÊı¾İ
 				HttpClient client = new DefaultHttpClient();
 				HttpGet get = new HttpGet(
 						"http://news.163.com/special/00011K6L/rss_newstop.xml");
 				try {
 					HttpResponse response = client.execute(get);
-					// ¼ì²é·şÎñÆ÷·µ»ØµÄÏìÓ¦Âë£¬200±íÊ¾³É¹¦
+					// æ£€æŸ¥æœåŠ¡å™¨è¿”å›çš„å“åº”ç ï¼Œ200è¡¨ç¤ºæˆåŠŸ
 					if (response.getStatusLine().getStatusCode() == 200) {
-						// ½«»ñÈ¡µ½µÄÊı¾İ×ª»»³ÉÎÄ±¾×Ö·û
-						HttpEntity entity = response.getEntity();
-						String content = EntityUtils.toString(entity, "UTF-8");
-						// ÔÚLgocatÊÓÍ¼ÖĞÏÔÊ¾µÃµ½µÄRSSÄÚÈİ
-						Log.i("rss", content);
+						//è·å–ç½‘ç»œè¿æ¥çš„è¾“å…¥æµï¼Œç„¶åè§£ææ”¶åˆ°çš„RSSæ•°æ®
+						InputStream stream = response.getEntity().getContent();
+						List<Map<String, String>> items = getRssItems(stream);
+						//å…ˆæ¸…ç©ºæ•°ç»„åˆ—è¡¨
+						newsList.clear();
+						//å°†è§£æåçš„RSSæ•°æ®è½¬æ¢æˆBeanå¯¹è±¡ä¿å­˜
+						for(Map<String, String> item:items){
+							NewsBean news = new NewsBean();
+							news.title = item.get("title");
+							news.description = item.get("description");
+							news.link = item.get("Link");
+							news.pubDate = item.get("pubDate");
+							news.guid = item.get("guid");
+							newsList.add(news);
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				//Êı¾İ¼ÓÔØÍê±ÏÏú»Ù½ø¶ÈÌõ
+				//é”€æ¯è¿›åº¦æ¡
 				pd.dismiss();
 			}
 		}).start();
@@ -83,9 +98,9 @@ public class Fragment1 extends Fragment {
 		itemList = new ArrayList<Map<String,String>>();
 		Map<String, String> item = new HashMap<String, String>();
 		String name ,value;
-		
+
 		int currNode = NODE_NONE;
-		
+
 		XmlPullParser pullParser = Xml.newPullParser();
 		pullParser.setInput(xml,"UTF-8");
 		int event = pullParser.getEventType();
@@ -93,13 +108,35 @@ public class Fragment1 extends Fragment {
 			switch (event) {
 			case XmlPullParser.START_TAG:
 				name = pullParser.getName();
+				//ç¡®å®šå½“å‰æ˜¯channelè¿˜æ˜¯itemèŠ‚ç‚¹
+				if("channel".equalsIgnoreCase(name)){
+					currNode = NODE_CHANNEL;
+					break;
+				}else if("item".equalsIgnoreCase(name)){
+					currNode = NODE_CHANNEL;
+					break;
+				}
+				//å¦‚æœå½“å‰æ˜¯åœ¨channelèŠ‚ç‚¹ä¸­ï¼Œåˆ™æå–itemèŠ‚ç‚¹çš„å­å…ƒç´ 
+				if(currNode == NODE_ITEM){
+					value = pullParser.nextText();
+					item.put(name, value);
+				}
 				break;
-
-			default:
+				//èŠ‚ç‚¹å…ƒç´ ç»“æŸï¼Œæ¯”å¦‚</title>
+			case XmlPullParser.END_TAG:
+				name = pullParser.getName();
+				//å¦‚æœåˆ°äº†ï¼Œ</item>èŠ‚ç‚¹ï¼Œè¯´æ˜ä¸€æ¡æ–°é—»ç»“æŸï¼Œç„¶å
+				//æŠŠè¿™æ¡æ–°é—»åŠ å…¥åŠ¨æ€æ•°ç»„ï¼Œå¹¶ä¸ºå“ä¸€è·³æ–°é—»åšå‡†å¤‡
+				if("item".equals(name)){
+					itemList.add(item);
+					item = new HashMap<String, String>();
+				}
 				break;
 			}
+			//ç»§ç»­å¤„ç†ä¸‹ä¸€èŠ‚ç‚¹
+			event = pullParser.next();
 		}
-		return null;
+		return itemList;
 	}
 
 

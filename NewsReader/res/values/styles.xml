@@ -1,0 +1,23 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="tab_item_style">
+        <item name="android:textSize">14.0sp</item>
+        <!-- 字体大小 -->
+        <item name="android:textColor">#ff696969</item>
+        <!-- 字体颜色 -->
+        <item name="android:singleLine">true</item>
+        <!-- 自体单行显示 -->
+
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:button">@null</item>
+    </style>
+
+</resources>

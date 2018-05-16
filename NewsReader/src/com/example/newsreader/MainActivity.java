@@ -9,37 +9,35 @@ import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.support.v4.app.*;
 
-
 public class MainActivity extends FragmentActivity {
 	private RadioGroup navGroup;
-	
-	
-	private String tabs[] = { "Ê×Ò³", "ĞÂÎÅ", "×éÍ¼", "¸ü¶à" };
+
+	private String tabs[] = { "ï¿½ï¿½Ò³", "ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½Í¼", "ï¿½ï¿½ï¿½" };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		// ³õÊ¼»¯µ×²¿µ¼º½À¸
+		// ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		navGroup = (RadioGroup) findViewById(R.id.navgroup);
-		// Éè¶¨µ¼º½À¸ÖĞÃ¿¸öÑ¡ÏîµÄÑ¡ÖĞÊ±¼äÏìÓ¦
+		// åˆå§‹åŒ–åº•éƒ¨å¯¼èˆªæ 
 		navGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				switch (checkedId) {
+				// åˆ‡æ¢åˆ°"é¦–é¡µ"ç•Œé¢
 				case R.id.radioButton1:
-					// ÇĞ»»µ½"Ê×Ò³"½çÃæ
 					switchFragmentSupport(R.id.content, tabs[0]);
 					break;
 				case R.id.radioButton2:
-					// ÇĞ»»µ½"Ê×Ò³"½çÃæ
+					// åˆ‡æ¢åˆ°"æ–°é—»"ç•Œé¢
 					switchFragmentSupport(R.id.content, tabs[1]);
 					break;
 				case R.id.radioButton3:
-					// ÇĞ»»µ½"Ê×Ò³"½çÃæ
+					// åˆ‡æ¢åˆ°"ç»„å›¾"ç•Œé¢
 					switchFragmentSupport(R.id.content, tabs[2]);
 					break;
 				case R.id.radioButton4:
-					// ÇĞ»»µ½"Ê×Ò³"½çÃæ
+					// åˆ‡æ¢åˆ°"æ›´å¤š"ç•Œé¢
 					switchFragmentSupport(R.id.content, tabs[3]);
 					break;
 				}
@@ -47,36 +45,39 @@ public class MainActivity extends FragmentActivity {
 			}
 
 		});
-		// Ä¬ÈÏÑ¡ÖĞ×î×ó±ßµÄRadioButton
+		// é»˜è®¤é€‰ä¸­ç¬¬ä¸€ä¸ªé¡µé¢
 		RadioButton btn = (RadioButton) navGroup.getChildAt(0);
 		btn.toggle();
 	}
 
 	/*
-	 * ¶¯Ì¬ÇĞ»»×é¼şÖĞÏÔÊ¾µÄ½çÃæ
-	 * @param containerId
-	 * ´øÇĞ»»½çÃæµÄ²¼¾Ö¿Ø¼ş
-	 * @param tag
-	 * Ä¿±êFragmentµÄ±êÇ©Ãû³Æ
+	 * åŠ¨æ€åˆ‡æ¢ç»„å»ºä¸­æ˜¾ç¤ºçš„ç•Œé¢
+	 * 
+	 * @param containerId 
+	 * å¸¦åˆ‡æ¢ç•Œé¢çš„å¸ƒå±€æ§ä»¶
+	 * @param tag 
+	 * ç›®æ ‡Fragmentçš„æ ‡ç­¾åç§°
 	 */
 
 	private void switchFragmentSupport(int containerId, String tag) {
-		// »ñÈ¡FragmentManager¹ÜÀíÆ÷
+		// è·å–FragmentMangagerç®¡ç†å™¨
 		FragmentManager manager = getSupportFragmentManager();
-		//»ñÈ¡tag±êÇ©Ãû²éÕÒÊÇ·ñ´æÔÚ¶ÔÓ¦µÄFragmemt¶ÔÏó
+		// æ ¹æ®tagæ ‡ç­¾åæŸ¥æ‰¾æ˜¯å¦å·²å­˜åœ¨å¯¹åº”çš„Fragmentå¯¹è±¡
 		Fragment destFragment = manager.findFragmentByTag(tag);
-		//Èç¹ûtag±êÇ©¶ÔÓ¦µÄFragment¶ÔÏó²»´æÔÚ£¬Ôò³õÊ¼»¯Ëü
-		if(destFragment == null){
-			if(tag.equals(tabs[0])) destFragment = new Fragment1();
-			if(tag.equals(tabs[1])) destFragment = new Fragment2();
-			if(tag.equals(tabs[2])) destFragment = new Fragment3();
-			if(tag.equals(tabs[3])) destFragment = new Fragment4();
+		// å¦‚æœtagæ ‡ç­¾å¯¹åº”çš„Fragmentå¯¹è±¡
+		if (destFragment == null) {
+			if (tag.equals(tabs[0]))
+				destFragment = new Fragment1();
+			if (tag.equals(tabs[1]))
+				destFragment = new Fragment2();
+			if (tag.equals(tabs[2]))
+				destFragment = new Fragment3();
+			if (tag.equals(tabs[3]))
+				destFragment = new Fragment4();
 		}
-		//»ñÈ¡FragmentTranstionÊÂÎñ¶ÔÏó
+		// è·å–FragmentTransaction
 		FragmentTransaction ft = manager.beginTransaction();
-		//½«×é¼şidÎªcontainerIdµÄÄÚÈİÌæ»»ÎªdestFragment
-		//²¢°ÑdestFragmentµÄ±êÇ©ÉèÎªtag±äÁ¿µÄÖµ
-		ft.replace(containerId,destFragment,tag);
+		ft.replace(containerId, destFragment, tag);
 		ft.commit();
 
 	}

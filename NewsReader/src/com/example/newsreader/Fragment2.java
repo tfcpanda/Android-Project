@@ -12,9 +12,9 @@ public class Fragment2 extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// ¼ÓÔØfragment1.xml²¼¾Ö
+		// 
 		layoutView = inflater.inflate(R.layout.fragment2, null);
-		// ·µ»ØlayoutView×÷Îªfragment1½çÃæ
+		// ï¿½ï¿½ï¿½ï¿½layoutViewï¿½ï¿½Îªfragment1ï¿½ï¿½ï¿½ï¿½
 		return layoutView;
 	}
 

@@ -1,6 +1,8 @@
 package mytest.newsreader.bean;
 
-public class NewsBean {
+import java.io.Serializable;
+
+public class NewsBean implements Serializable {
 	public String title;
 	public String link;
 	public String description;

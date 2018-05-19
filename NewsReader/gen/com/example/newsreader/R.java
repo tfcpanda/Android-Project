@@ -39,10 +39,19 @@ public final class R {
         public static final int tab_item_p=0x7f02000f;
     }
     public static final class id {
-        public static final int action_settings=0x7f080008;
+        public static final int action_settings=0x7f080011;
         public static final int content=0x7f080000;
+        public static final int imageViewBack=0x7f08000b;
+        public static final int imageViewBrowser=0x7f08000a;
         public static final int listView1=0x7f080006;
         public static final int navgroup=0x7f080001;
+        public static final int newsDetail=0x7f08000c;
+        public static final int newsPubDate=0x7f080009;
+        public static final int newsTitle=0x7f080008;
+        public static final int news_description=0x7f08000e;
+        public static final int news_inco=0x7f080010;
+        public static final int news_pubdate=0x7f08000f;
+        public static final int news_title=0x7f08000d;
         public static final int radioButton1=0x7f080002;
         public static final int radioButton2=0x7f080003;
         public static final int radioButton3=0x7f080004;
@@ -55,6 +64,8 @@ public final class R {
         public static final int fragment2=0x7f030002;
         public static final int fragment3=0x7f030003;
         public static final int fragment4=0x7f030004;
+        public static final int news_detail=0x7f030005;
+        public static final int news_item=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f070000;
